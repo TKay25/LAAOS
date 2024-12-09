@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
-import plotly.express as px
 import os
 import pickle
 import numpy as np
