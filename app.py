@@ -134,14 +134,10 @@ def register():
             conn.commit()  # Commit the changes
             print("Data inserted successfully!")
 
+            return redirect(url_for('back_to_index2', username = username))  # Redirect back to login page
+
         except Exception as e:
             print("Error inserting data into the database:", e)
-
-        # Return a success message or redirect after successful registration
-        return "Registration successful!"
-
-    # Render the registration form for GET requests
-    return render_template('register.html')
 
 @app.route("/recommendation", methods=["POST"])
 def back_to_reco():
