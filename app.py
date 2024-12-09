@@ -3,7 +3,6 @@ import os
 import pickle
 import numpy as np
 import joblib
-import mysql.connector
 import psycopg2
 from psycopg2 import sql
 
