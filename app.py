@@ -79,10 +79,6 @@ def login():
             print("Error connecting to the database:", e)
             flash("Error occurred during login. Please try again.", "danger")
             return redirect(url_for('login'))
-        finally:
-            if conn:
-                cursor.close()
-                conn.close()
 
 
     elif request.method == "GET":
@@ -93,8 +89,6 @@ def login():
             print("Error connecting to the database:", e)
             flash("Error occurred during login. Please try again.", "danger")
             return redirect(url_for('login'))
-
-    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
