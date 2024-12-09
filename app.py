@@ -45,12 +45,6 @@ crops = {
     "r5": "Cattle, Game-ranching"
 }
 
-recommendations = {}
-
-# Model initialization
-model = joblib.load(open("./random_forest_model.pkl", "rb"))
-kmeans = joblib.load(open("./kmean_Model.pkl", "rb"))
-
 
 @app.route("/")
 def index():
