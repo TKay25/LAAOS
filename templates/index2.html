@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--~~~~~~~~~~~~~~~ Favicon ~~~~~~~~~~~~~~~-->
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+    <!--~~~~~~~~~~~~~~~ Remix Icon ~~~~~~~~~~~~~~~-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css" />
+
+    <!--~~~~~~~~~~~~~~~ Swiper's CSS ~~~~~~~~~~~~~~~-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!--~~~~~~~~~~~~~~~ Local CSS ~~~~~~~~~~~~~~~-->
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+
+    <title>Goba land optimizer</title>
+
+</head>
+
+<body>
+    <!-- login modal -->
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Sign in to our platform
+                    </h3>
+                    <button type="button"
+                        class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="authentication-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5">
+                    <form class="space-y-4" action="#">
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                email</label>
+                            <input type="email" name="email" id="email"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="name@company.com" required />
+                        </div>
+                        <div>
+                            <label for="password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                required />
+                        </div>
+                        <div class="flex justify-between">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="remember" type="checkbox" value=""
+                                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                                        required />
+                                </div>
+                                <label for="remember"
+                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember
+                                    me</label>
+                            </div>
+                            <a href="#" class="text-sm text-blue-700 hover:underline dark:text-blue-500">Lost
+                                Password?</a>
+                        </div>
+                        <button type="submit"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login
+                            to your account</button>
+                        <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+                            Not registered? <a href="#" class="text-blue-700 hover:underline dark:text-blue-500">Create
+                                account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--~~~~~~~~~~~~~~~ Header ~~~~~~~~~~~~~~~-->
+    <header id="navbar" class="bg-green-950 fixed w-full top-0 left-0 z-50">
+
+        <nav class="container flex items-center justify-between h-16 sm:h-20">
+
+            <div class="font-Lobster sm:text-2xl">{{username}}'s ML System</div>
+
+            <div id="nav-menu" class="absolute top-0 left-[-100%] min-h-[80vh] w-full
+                bg-green-950/80 backdrop-blur-sm flex items-center
+                justify-center duration-300 overflow-hidden lg:static 
+                lg:min-h-fit lg:bg-transparent lg:w-auto">
+
+                <ul class="flex flex-col items-center gap-8 lg:flex-row">
+                    <li>
+                        <a href="#home" class="nav-link active">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="#about" class="nav-link">About</a>
+                    </li>
+
+                    <li>
+                        <a href="#services" class="nav-link">Services</a>
+                    </li>
+
+                    <li>
+                        <a href="#reviews" class="nav-link">Review</a>
+                    </li>
+                    <li>
+                        <!-- know more -->
+                        <button id="logoutButton" class="btn btn_outline">
+                            <span class="flex gap-2">Logout
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path fill-rule="evenodd" d="M10.25 3a.75.75 0 0 1 .75-.75h8a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75h-8a.75.75 0 0 1-.75-.75V3zM3 11.5a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75v-1.5z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+            </div>
+            </li>
+            </ul>
+
+            <div class="absolute bottom-0 -right-10 opacity-90 lg:hidden">
+                <img src="{{url_for('static', filename='img/leaf-1.png')}}" alt="" class="w-32" />
+            </div>
+
+            <div class="absolute -top-5 -left-0 rotate-90 opacity-50 lg:hidden">
+                <img src="{{url_for('static', filename='img/leaf-2.png')}}" alt="" class="w-32" />
+            </div>
+            </div>
+
+            <div id="hamburger" class="text-xl sm:text-3xl cursor-pointer z-50 lg:hidden">
+                <!-- <i class="ri-menu-4-line" id="humburger"></i> -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill-rule="evenodd"
+                        d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Crop Prediction Main modal -->
+        <div id="crud-modal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-lg max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            Crop Predict
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="crud-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form class="p-4 md:p-5" action='/predict' method='post'>
+                        <div class="grid gap-4 mb-4 grid-cols-2">
+                            <div class="col-span-2">
+                                <label for="name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
+                                <input type="number" name="region" id="region"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Enter Farming Region" required="">
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="maxTemp"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Max
+                                    Temperature</label>
+                                <input type="number" name="maxTemp" id="maxTemp"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="40" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="minTemp"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Min
+                                    Temperature</label>
+                                <input type="number" name="minTemp" id="minTemp"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="10" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="maxRain"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Max
+                                    Rainfall</label>
+                                <input type="number" name="maxRain" id="maxRain"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="40" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="minRain"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Min
+                                    Rainfall</label>
+                                <input type="number" name="minRain" id="minRain"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="10" required="">
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="fertlizerUsage"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rate of
+                                    Fertilizer Usage</label>
+                                <input type="number" name="fertlizerUsage" id="fertlizerUsage"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="40" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="pestIncidence"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rate of Pest
+                                    Incidence</label>
+                                <input type="number" name="pestIncidence" id="pestIncidence"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="10" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="labourAvailability"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rate of Labour
+                                    Availability</label>
+                                <input type="number" name="labourAvailability" id="labourAvailability"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="40" required="">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="marketAvailability"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rate of Market
+                                    Availability</label>
+                                <input type="number" name="marketAvailability" id="marketAvailability"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="10" required="">
+                            </div>
+                        </div>
+                        <button type="submit" value="Predict" id="predictButton" data-modal-target="deleteModal"
+                            data-modal-toggle="deleteModal"
+                            class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6 gap-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                            Predict Crop
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- results modal for crop prediction -->
+        <div id="deleteModal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+            <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+                <!-- Modal content -->
+                <div class="relative p-4 text-center bg-gray-800 rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <button type="button"
+                        class="mb-4 text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="deleteModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                    </svg>
+
+                    <p class="mb-4 text-gray-500 dark:text-gray-300">{{prediction_text}}</p>
+                    <div class="flex justify-center items-center space-x-4">
+                        <button data-modal-toggle="deleteModal" type="button"
+                            class="py-2 px-3 text-sm font-medium text-gray-500 bg-gray-700 rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                            Thank you get next prediction
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Land Allocation Main modal -->
+        <div id="landAllocation-modal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative flex bg-white rounded-lg shadow dark:bg-gray-700" style="width: 800px; margin: auto;">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            Land Allocation
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="landAllocation-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form class="p-4 md:p-5" action='/allocate' method='post'>
+                        <div class="grid gap-4 mb-4 grid-cols-2">
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="province" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Province of interest</label>
+                                <select name="province" id="province"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required onchange="updateDistrictsAndCrops()">
+                                    <option value="" disabled selected>Select a province</option>
+                                    <option value="Harare">Harare</option>
+                                    <option value="Bulawayo">Bulawayo</option>
+                                    <option value="Mashonaland Central">Mashonaland Central</option>
+                                    <option value="Mashonaland East">Mashonaland East</option>
+                                    <option value="Mashonaland West">Mashonaland West</option>
+                                    <option value="Masvingo">Masvingo</option>
+                                    <option value="Matabeleland North">Matabeleland North</option>
+                                    <option value="Matabeleland South">Matabeleland South</option>
+                                    <option value="Midlands">Midlands</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="district" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">District of interest</label>
+                                <select name="district" id="district"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required>
+                                    <option value="" disabled selected>Select a district</option>
+                                </select>
+                            </div>
+
+                            <div id="farmingRegionDiv" class="col-span-2 sm:col-span-1" style="display: none;">
+                                <label id="farmingRegionLabel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Farming Region</label>
+                            </div>
+                            
+                            <!-- Crops Dropdown -->
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="crops" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Crops</label>
+                                <select name="crops" id="crops" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <option value="" disabled selected>Select crop type</option>
+                                    <!-- Crop options will be populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="farmingtype" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Farming Type</label>
+                                <select name="farmingtype" id="farmingtype"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required >
+                                    <option value="" disabled selected>Select farming type</option>
+                                    <option value="Harare">Commercial</option>
+                                    <option value="Bulawayo">Substrate</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="machinery" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">You have machinery?</label>
+                                <select name="machinery" id="machinery"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required >
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Harare">Yes</option>
+                                    <option value="Bulawayo">No</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-1">
+                                <label for="inputs" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">You have inputs?</label>
+                                <select name="inputs" id="inputs"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    required >
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Harare">Yes</option>
+                                    <option value="Bulawayo">No</option>
+
+                                </select>
+                            </div>
+                            <div id="availableCapitalDiv" class="col-span-2 sm:col-span-1">
+                                <label for="availableCapital" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Available Capital</label>
+                                <input type="number" name="availableCapital" id="availableCapital"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Enter amount" required>
+                            </div>
+
+                        </div>
+                        <button type="submit" value="Allocate" id="allocateButton" data-modal-target="allocationResult"
+                            data-modal-toggle="allocationResult"
+                            class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6 gap-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                            Allocate Land
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- results modal for land allocation -->
+        <div id="allocationResult" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+            <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+                <!-- Modal content -->
+                <div class="relative p-4 text-center bg-gray-800 rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                    <button type="button"
+                        class="mb-4 text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="allocationResult">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                    </svg>
+
+                    <p class="mb-4 text-gray-500 dark:text-gray-300">{{prediction_text}}</p>
+                    <div class="flex justify-center items-center space-x-4">
+                        <button data-modal-toggle="allocationResult" type="button"
+                            class="py-2 px-3 text-sm font-medium text-gray-500 bg-gray-700 rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                            Thank you get next prediction
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--~~~~~~~~~~~~~~~ Home ~~~~~~~~~~~~~~~-->
+        <section id="home">
+            <div class="container">
+
+                <!-- blob 1 -->
+                <div class="w-64 h-64 bg-green-700 rounded-full blur-3xl -z-10 opacity-40 
+                    absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                </div>
+
+                <!-- blob 2 -->
+                <div class="w-64 h-64 bg-green-700 rounded-full blur-3xl -z-10 opacity-40 
+                    absolute bottom-0 right-0">
+                </div>
+
+                <div class="flex flex-col items-center gap-5 lg:flex-row">
+                    <!-- content -->
+                    <div class="home_data w-full space-y-5 lg:w-1/2">
+
+                        <h1>
+                            <span class="text-yellow-500">Machine Learning</span> makes a
+                            <br> positive
+                            <span class="text-yellow-500">impact</span> on <br> your Yield
+                        </h1>
+
+                        <p class=" text-slate-300 font-Lobster">
+                            The future of farming by leveraging the power of Artificial Intelligence (AI) inform of
+                            Machine Learning (ML) using combination of different models to predict crops to plant,
+                            effectively allocate farming resources and optimize land use
+                        </p>
+
+                        <!-- straight to predictions -->
+
+                        <div class="flex flex-col gap-2 sm:flex-row md:gap-4 lg:pt-5 xl:pt-10">
+                            <a href="#services">
+                                <button class="btn">
+                                    <span class="flex gap-2">Farm by AI
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </a>
+
+                            <!-- know more -->
+                            <a href="#about">
+                                <button class="btn btn_outline">
+                                    <span class="flex gap-2">Know More
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <p class=" text-xs font-Lobster text-slate-300">
+                            Enjoy farming with edge technology in the future
+                        </p>
+
+                        <div class="flex items-center gap-5 text-lg lg:pt-10">
+                            <i
+                                class="ri-facebook-fill text-slate-300 hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                            <i
+                                class="ri-twitter-x-line text-slate-300 hover:text-yellow-500 duration-300 cursor-pointer text-base"></i>
+                            <i
+                                class="ri-instagram-line text-slate-300 hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                            <i
+                                class="ri-linkedin-fill text-slate-300 hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                        </div>
+                    </div>
+
+                    <!-- images -->
+                    <div class=" w-full relative lg:w-1/2">
+                        <img src="{{url_for('static', filename='img/home.png')}}" alt="" class="home_img">
+
+                        <!-- leaf -->
+                        <div class="absolute -top-10 right-0 opacity-30 xl:top-5 animate-movingY">
+                            <i class="ri-leaf-line text-6xl text-yellow-500"></i>
+                        </div>
+
+                        <!-- flower -->
+                        <div class="absolute bottom-0 left-0 opacity-30 animate-rotating xl:bottom-12 ">
+                            <i class="ri-flower-line text-6xl text-yellow-500"></i>
+                        </div>
+
+                        <!-- plant -->
+                        <div class="hidden absolute -top-8 -left-5 opacity-30 lg:block animate-scalingUp ">
+                            <i class="ri-plant-line text-6xl text-yellow-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--~~~~~~~~~~~~~~~ Services ~~~~~~~~~~~~~~~-->
+        <div class="bg-white text-green-900 py-20">
+            <div class="container w-full grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+                <!-- card 1 -->
+                <div class="service_card border border-green-900 p-5 cursor-pointer rounded-md hover:shadow-2xl 
+                        hover:translate-y-1 duration-300 space-y-5">
+                    <div class="flex items-center gap-5">
+                        <!-- <i class="ri-truck-line"></i> -->
+                        <span class="text-3xl md:text-4xl xl:text-5xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="size-6">
+                                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                <path fill-rule="evenodd"
+                                    d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </span>
+
+                        <p class=" md:text-lg font-bold">
+                            Crop <br> Prediction
+                        </p>
+                    </div>
+
+                    <p class=" font-Lobster">
+                        Predict which crop to plant using sophisticated Machine Learning Algorithms for greater yield
+                    </p>
+                </div>
+
+                <!-- card 2 -->
+                <div class="service_card border border-green-900 p-5 cursor-pointer rounded-md hover:shadow-2xl 
+                        hover:translate-y-1 duration-300 space-y-5">
+                    <div class="flex items-center gap-5">
+                        <!-- <i class="ri-service-line"></i> -->
+                        <span class="text-3xl md:text-4xl xl:text-5xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="size-6">
+                                <path
+                                    d="M6 3a3 3 0 0 0-3 3v2.25a3 3 0 0 0 3 3h2.25a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3H6ZM15.75 3a3 3 0 0 0-3 3v2.25a3 3 0 0 0 3 3H18a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3h-2.25ZM6 12.75a3 3 0 0 0-3 3V18a3 3 0 0 0 3 3h2.25a3 3 0 0 0 3-3v-2.25a3 3 0 0 0-3-3H6ZM17.625 13.5a.75.75 0 0 0-1.5 0v2.625H13.5a.75.75 0 0 0 0 1.5h2.625v2.625a.75.75 0 0 0 1.5 0v-2.625h2.625a.75.75 0 0 0 0-1.5h-2.625V13.5Z" />
+                            </svg>
+                        </span>
+
+                        <p class=" md:text-lg font-bold">
+                            Land <br> Optimization
+                        </p>
+                    </div>
+
+                    <p class=" font-Lobster">
+                        Do not waste any land to production that does not produce you yield improve land utilization by
+                        using ML
+                    </p>
+                </div>
+
+                <!-- card 3 -->
+                <div class="service_card border border-green-900 p-5 cursor-pointer rounded-md hover:shadow-2xl 
+                        hover:translate-y-1 duration-300 space-y-5">
+                    <div class="flex items-center gap-5">
+                        <!-- <i class="ri-truck-line"></i> -->
+                        <span class="text-3xl md:text-4xl xl:text-5xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="size-6">
+                                <path fill-rule="evenodd"
+                                    d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </span>
+
+                        <p class=" md:text-lg font-bold">
+                            Resource <br> Allocation
+                        </p>
+                    </div>
+
+                    <p class=" font-Lobster">
+                        By utilizing ML algorithms to effectively allocate farming, labor resources and maximize your
+                        yield
+                    </p>
+                </div>
+
+                <!-- card 4 -->
+                <div class="service_card border border-green-900 p-5 cursor-pointer rounded-md hover:shadow-2xl 
+                        hover:translate-y-1 duration-300 space-y-5">
+                    <div class="flex items-center gap-5">
+                        <!-- <i class="ri-truck-line"></i> -->
+                        <span class="text-3xl md:text-4xl xl:text-5xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="size-6">
+                                <path
+                                    d="M21 6.375c0 2.692-4.03 4.875-9 4.875S3 9.067 3 6.375 7.03 1.5 12 1.5s9 2.183 9 4.875Z" />
+                                <path
+                                    d="M12 12.75c2.685 0 5.19-.586 7.078-1.609a8.283 8.283 0 0 0 1.897-1.384c.016.121.025.244.025.368C21 12.817 16.97 15 12 15s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.285 8.285 0 0 0 1.897 1.384C6.809 12.164 9.315 12.75 12 12.75Z" />
+                                <path
+                                    d="M12 16.5c2.685 0 5.19-.586 7.078-1.609a8.282 8.282 0 0 0 1.897-1.384c.016.121.025.244.025.368 0 2.692-4.03 4.875-9 4.875s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.284 8.284 0 0 0 1.897 1.384C6.809 15.914 9.315 16.5 12 16.5Z" />
+                                <path
+                                    d="M12 20.25c2.685 0 5.19-.586 7.078-1.609a8.282 8.282 0 0 0 1.897-1.384c.016.121.025.244.025.368 0 2.692-4.03 4.875-9 4.875s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.284 8.284 0 0 0 1.897 1.384C6.809 19.664 9.315 20.25 12 20.25Z" />
+                            </svg>
+
+                        </span>
+
+                        <p class=" md:text-lg font-bold">
+                            Data <br> Collection
+                        </p>
+                    </div>
+
+                    <p class=" font-Lobster">
+                        We collect data that engineer our Machine Learning models for better prediction based on your
+                        farming
+                        experience using various IoT devices and helping you farming the data driven way
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!--~~~~~~~~~~~~~~~ About us ~~~~~~~~~~~~~~~-->
+        <section id="about" class=" relative overflow-hidden">
+
+            <div class="about_leaf absolute -top-8 -right-12 opacity-50">
+                <img src="{{url_for('static', filename='img/leaf-3.png')}}" alt="" class="w-40 md:w-52 xl:w-64">
+            </div>
+
+            <div class="about_data flex flex-col items-center gap-3 text-center mb-10 md:mb-20">
+                <h2 class="title">
+                    About this system
+                </h2>
+
+                <p class="max-w-2xl">
+                    Here is a detailed information on what led to this project
+                </p>
+            </div>
+
+            <div class=" container space-y-10 xl:space-y-0">
+                <!-- item 1 -->
+                <div class=" flex flex-col items-center lg:flex-row gap-5">
+                    <!-- image -->
+                    <div class="about-item1-img w-full lg:w-1/2">
+                        <img src="{{url_for('static', filename='img/zmap.png')}}" alt="about image"
+                            class=" w-full sm:w-2/3 lg:w-full xl:w-2/3 mx-auto">
+                    </div>
+
+                    <!-- content -->
+                    <div class="about-item1-content w-full lg:w-1/2">
+                        <div class=" space-y-5">
+                            <h3>
+                                Its time to <span class="text-yellow-500">maximize your yield</span> <br> now
+                            </h3>
+
+                            <p class=" text-slate-300 font-Lobster">
+                                Introduction: Zimbabwe faces challenges in land management and agricultural
+                                productivity.
+                                Machine learning can help optimize land use and crop selection based on climatic
+                                conditions
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- item 2 -->
+                <div class=" flex flex-col items-center lg:flex-row-reverse  gap-5">
+                    <!-- image -->
+                    <div class="about-item2-img w-full lg:w-1/2">
+                        <img src="{{url_for('static', filename='img/smartfarm.jpeg')}}" alt="about image"
+                            class=" w-full sm:w-2/3 lg:w-full xl:w-2/3 mx-auto">
+                    </div>
+
+                    <!-- content -->
+                    <div class="about-item2-content w-full lg:w-1/2">
+                        <div class=" space-y-5">
+                            <h3>
+                                Farm with <span class="text-yellow-500">ML Algorithms</span> <br> now
+                            </h3>
+
+                            <p class=" text-slate-300 font-Lobster">
+                                I developed develop machine learning models to enhance agricultural productivity by
+                                predicting the best
+                                crops to grow based on factors like rainfall, pH value, humidity, and temperature. These
+                                models also serve
+                                the purpose of Resource Allocation and and Land Optimization
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!--~~~~~~~~~~~~~~~ Services ~~~~~~~~~~~~~~~-->
+        <section id="services" class=" bg-green-900">
+            <div class="popular_services_top flex flex-col items-center gap-3 text-center mb-40">
+
+                <h2 class="title">Your Preferred Service</h2>
+                <p class="max-w-2xl">
+                    Please follow through our specialized Services
+                </p>
+            </div>
+
+            <div
+                class="container w-full grid grid-cols-1 gap-x-8 gap-y-36 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <!-- card 1 -->
+                <div class=" popular_service bg-green-950 p-10 pt-24 rounded-md relative">
+                    <img src="{{url_for('static', filename='img/crop_prediction2.webp')}}" alt=""
+                        class=" w-56 absolute -top-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 duration-500">
+                    <p class=" italic">Machine Learning for</p>
+                    <h3>Crop Prediction</h3>
+
+                    <div class=" text-yellow-500 text-xs py-3">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                    </div>
+
+                    <div class=" flex items-center justify-between">
+                        <button class="btn btn_outline">
+                            <span class="flex gap-2">Try Me
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="size-6">
+                                    <path fill-rule="evenodd"
+                                        d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- card 2 -->
+                <div class=" popular_service bg-green-950 p-10 pt-24 rounded-md relative">
+                    <img src="{{url_for('static', filename='img/resource-allocation.png')}}" alt=""
+                        class=" w-56 absolute -top-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 duration-500">
+                    <p class=" italic">Machine Learning</p>
+                    <h3>Resource Allocation</h3>
+
+                    <div class=" text-yellow-500 text-xs py-3">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                    </div>
+
+                    <div class=" flex items-center justify-between">
+                        <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="btn btn_outline">
+                            <span class="flex gap-2">Try Me
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="size-6">
+                                    <path fill-rule="evenodd"
+                                        d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- card 3 -->
+                <div class=" popular_service bg-green-950 p-10 pt-24 rounded-md relative">
+                    <img src="{{url_for('static', filename='img/management.png')}}" alt=""
+                        class=" w-56 absolute -top-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 duration-500">
+                    <p class=" italic">Machine Learning</p>
+                    <h3>Land Optimization</h3>
+
+                    <div class=" text-yellow-500 text-xs py-3">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                    </div>
+
+                    <div class=" flex items-center justify-between">
+                        <button data-modal-target="landAllocation-modal" data-modal-toggle="landAllocation-modal"
+                            class="btn btn_outline">
+                            <span class="flex gap-2">Try Me
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="size-6">
+                                    <path fill-rule="evenodd"
+                                        d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- card 4 -->
+                <div class=" popular_service bg-green-950 p-10 pt-24 rounded-md relative">
+                    <img src="{{url_for('static', filename='img/database-management.png')}}" alt=""
+                        class=" w-56 absolute -top-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 duration-500">
+                    <p class=" italic">Data Collection</p>
+                    <h3>Crops</h3>
+
+                    <div class=" text-yellow-500 text-xs py-3">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                        <i class="ri-star-line text-gray-400"></i>
+                    </div>
+
+                    <div class=" flex items-center justify-between">
+                        <button class="btn btn_outline">
+                            <span class="flex gap-2">Know More
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="size-6">
+                                    <path fill-rule="evenodd"
+                                        d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--~~~~~~~~~~~~~~~ Review ~~~~~~~~~~~~~~~-->
+        <section id="reviews" class="relative mb-20 md:mb28 overflow-hidden">
+
+            <div class="review_leaf absolute -top-8 -left-12 opacity-50">
+                <img src="{{url_for('static', filename='img/leaf-4.png')}}" alt="leaf_image"
+                    class="w-40 md:w-52: xl:w-64">
+            </div>
+
+            <div class="reviews_top flex flex-col items-center gap-3 text-center mb-10">
+
+                <h2 class="title">What Clients say about US</h2>
+                <p class="max-w-2xl">
+                    Please follow through our specialized Services
+                </p>
+            </div>
+
+            <div class="review_swiper container">
+                <div class="py-12 swiper">
+                    <ul class="swiper-wrapper">
+                        <li class="swiper-slide">
+                            <div class=" flex flex-col gap-5 bg-green-900 rounded-md p-6">
+                                <p class=" font-Lobster">Machine learning has revolutionized my farming.It helps predict
+                                    crop yields,
+                                    detect pests early, and automate labor-intensive tasks like weeding and harvesting.
+                                    These advancements make farming more efficient, sustainable, and productive.
+                                    Exciting times ahead</p>
+                                <div class=" flex items-center rounded">
+                                    <img src="{{url_for('static', filename='img/famer.jpeg')}}" alt="farmer_photo"
+                                        class=" rounded-full w-12 h-12">
+                                    <div class=" ml-2">
+                                        <p class=" text-yellow-500 uppercase">Mr Fodya</p>
+                                        <p>Tobacco Farmer</p>
+                                    </div>
+                                    <i class="ri-double-quotes-r ml-auto"></i>
+
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="swiper-slide">
+                            <div class=" flex flex-col gap-5 bg-green-900 rounded-md p-6">
+                                <p class=" font-Lobster">Machine learning has significantly improved resource allocation
+                                    on my farm. By analyzing data on soil health, weather, and crop needs, it helps me
+                                    optimize the use of water, fertilizers, and other inputs. This technology ensures
+                                    that resources are used efficiently, boosting productivity and sustainability.</p>
+                                <div class=" flex items-center rounded">
+                                    <img src="{{url_for('static', filename='img/review-1.jpg')}}" alt="farmer_photo"
+                                        class=" w-12 h-12 rounded-full">
+                                    <div class=" ml-2">
+                                        <p class=" text-yellow-500 uppercase">Mr Chibage</p>
+                                        <p>Maize Farmer</p>
+                                    </div>
+                                    <i class="ri-double-quotes-r ml-auto"></i>
+
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="swiper-slide">
+                            <div class=" flex flex-col gap-5 bg-green-900 rounded-md p-6">
+                                <p class=" font-Lobster">Machine learning has revolutionized my farming.It helps predict
+                                    crop yields,
+                                    detect pests early, and automate labor-intensive tasks like weeding and harvesting.
+                                    These advancements make farming more efficient, sustainable, and productive.
+                                    Exciting times ahead</p>
+                                <div class=" flex items-center rounded">
+                                    <img src="{{url_for('static', filename='img/famer.jpeg')}}" alt="farmer_photo"
+                                        class=" w-12 h-12 rounded-full">
+                                    <div class=" ml-2">
+                                        <p class=" text-yellow-500 uppercase">Mr Fodya</p>
+                                        <p>Tobacco Farmer</p>
+                                    </div>
+                                    <i class="ri-double-quotes-r ml-auto"></i>
+
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="swiper-slide">
+                            <div class=" flex flex-col gap-5 bg-green-900 rounded-md p-6">
+                                <p class=" font-Lobster">Machine learning has revolutionized my farming.It helps predict
+                                    crop yields,
+                                    detect pests early, and automate labor-intensive tasks like weeding and harvesting.
+                                    These advancements make farming more efficient, sustainable, and productive.
+                                    Exciting times ahead</p>
+                                <div class=" flex items-center rounded">
+                                    <img src="{{url_for('static', filename='img/famer.jpeg')}}" alt="farmer_photo"
+                                        class=" w-12 h-12 rounded-full">
+                                    <div class=" ml-2">
+                                        <p class=" text-yellow-500 uppercase">Mr Fodya</p>
+                                        <p>Tobacco Farmer</p>
+                                    </div>
+                                    <i class="ri-double-quotes-r ml-auto"></i>
+
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="swiper-pagination"></div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!--~~~~~~~~~~~~~~~ Footer ~~~~~~~~~~~~~~~-->
+    <footer class="bg-yellow-100 text-green-950 pt-20 pb-10 md:pt-28 relative">
+        <!-- newsletter -->
+        <div class="container text-white absolute top-0 right-0 left-0 -translate-y-1/2">
+            <div class="bg-green-900 px-10 pt-5 pb-10 space-y-5 rounded-md">
+                <h3>
+                    <span class="text-yellow-500">Subscribe</span> to my newsletter
+                </h3>
+                <div class="flex flex-col md:flex-row gap-1">
+                    <input type="email" placeholder="Enter your Email"
+                        class="w-full px-5 py-3 text-green-900 rounded-md outline-none">
+                    <button
+                        class=" flex items-center justify-center gap-1 bg-green-950 px-5 py-3 rounded-md hover:opacity-80 duration-300">
+                        <span>Subscribe</span>
+                        <i class="ri-send-plane-2-fill"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- social icon -->
+        <div class="footer_icon container mt-16 mb-10">
+            <div class=" border-b border-green-500 relative">
+                <div class=" absolute top-0 transform -translate-y-1/2 left-0 right-0
+                max-w-36 mx-auto">
+                    <div class=" bg-yellow-100 text-lg text-center space-x-2">
+                        <i class=" ri-facebook-fill hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                        <i class=" ri-twitter-x-line hover:text-yellow-500 duration-300 cursor-pointer text-base"></i>
+                        <i class=" ri-instagram-line hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                        <i class=" ri-linkedin-fill hover:text-yellow-500 duration-300 cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- content -->
+        <div
+            class="footer_content container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 text-center md:text-start">
+            <!-- item 1 -->
+            <div>
+                <div class=" text-2xl text-green-700 text-center inline-block">
+                    <i class="ri-leaf-fill"></i>
+                    <p class=" font-Lobster text-xl sm:text-2xl">Goba's ML system</p>
+                </div>
+            </div>
+
+            <!-- item 2 -->
+            <div>
+                <p class=" text-lg mb-5 font-bold">Quick links</p>
+                <div class=" flex flex-col gap-1">
+                    <a href="#">Services</a>
+                    <a href="#">ML Algorithm</a>
+                    <a href="#">Resource Allocation</a>
+                    <a href="#">Land Optimization</a>
+                    <a href="#">Crop Prediction</a>
+                </div>
+            </div>
+
+            <!-- item 3 -->
+            <div>
+                <p class=" text-lg mb-5 font-bold">Models</p>
+                <div class=" flex flex-col gap-1">
+                    <a href="#">Land Optimization</a>
+                    <a href="#">Crop Prediction</a>
+                    <a href="#">Resource Allocation</a>
+                </div>
+            </div>
+
+            <!-- item 4 -->
+            <div>
+                <p class=" text-lg mb-5 font-bold">Contact Us</p>
+                <div class=" flex flex-col gap-1">
+                    <a href="+263783275349">+263 78 327 5349</a>
+                    <a href="+263779253120">Me</a>
+                    <a href="mailto:goba@gmail.com">goba@gmail.com</a>
+                    <br>
+                    <p>Adress goes here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- copyright -->
+        <div class="copyright container">
+            <p class=" text-center mt-10 opacity-50">
+                Copyright &copy; 2024 <a href="https://shorturl.at/UGo85">EpicScripts</a>. All rights reserved
+            </p>
+        </div>
+
+        <!-- floral image -->
+        <div class="footer_floral absolute bottom-0 left-0 opacity-20 pointer-events-none">
+            <img src="{{url_for('static', filename='img/floral-1.png')}}" alt="" class=" w-full lg:w-1/2">
+        </div>
+    </footer>
+
+    <!--~~~~~~~~~~~~~~~ Scroll Up ~~~~~~~~~~~~~~~-->
+    <a href="#" class=" fixed right-4 -bottom-1/2 bg-yellow-500 shadow-sm inline-block px-3 py-1
+    md:px-4 md:py-2 rounded-md text-lg z-50 hover:-translate-y-1 duration-300" id="scroll-up">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!--~~~~~~~~~~~~~~~ Swiper JS ~~~~~~~~~~~~~~~-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!--~~~~~~~~~~ SCROLLREVEAL ~~~~~~~~~~-->
+    <script src="{{ url_for('static', filename='/js/scrollreveal.min.js') }}"></script>
+
+    <!--~~~~~~~~~~ mainjs ~~~~~~~~~~-->
+    <script src="{{ url_for('static', filename='/js/main.js') }}"></script>
+
+    <!--~~~~~~~~~~ flowbiteminjs ~~~~~~~~~~-->
+    <script src="{{ url_for('static', filename='/js/flowbite.min.js') }}"></script>
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            // Redirect to the logout route (This will call the POST method)
+            window.location.href = "{{ url_for('logout') }}";
+        });
+
+
+        function updateDistrictsAndCrops() {
+            const province = document.getElementById('province').value;
+            const districtSelect = document.getElementById('district');
+            const farmingRegionDiv = document.getElementById('farmingRegionDiv');
+            const farmingRegionLabel = document.getElementById('farmingRegionLabel');
+            const cropsSelect = document.getElementById('crops');
+
+            // Clear previous options
+            districtSelect.innerHTML = '<option value="" disabled selected>Select a district</option>';
+            cropsSelect.innerHTML = '<option value="" disabled selected>Select crop type</option>';
+            farmingRegionDiv.style.display = 'none';
+
+            // Define districts and farming regions
+            let districts = [];
+            let farmingRegions = {};
+            let crops = {};
+
+            if (province === 'Mashonaland West') {
+                districts = ['Chegutu', 'Chinhoyi', 'Kadoma', 'Kariba', 'Karoi', 'Makonde', 'Sanyati', 'Zvimba'];
+                farmingRegions = {
+                    'Chegutu': 'Natural Region 2',
+                    'Chinhoyi': 'Natural Region 2',
+                    'Kadoma': 'Natural Region 2',
+                    'Kariba': 'Natural Region 5',
+                    'Karoi': 'Natural Region 3',
+                    'Makonde': 'Natural Region 3',
+                    'Sanyati': 'Natural Region 2',
+                    'Zvimba': 'Natural Region 2'
+                };
+                crops = {
+                    "r1": "Coffee, Tea, Bananas, Apples, Potatoes, Peas, Vegetables, Proteas",
+                    "r2": "Maize, Cotton, Groundnuts, Sunflowers",
+                    "r3": "Tobacco, Maize, Cotton, Wheat, Soybeans, Sorghum, Groundnuts",
+                    "r4": "Drought-tolerant Maize, Sorghum, Pearl Millet, Finger Millet",
+                    "r5": "Cattle, Game-ranching"
+                };
+            } else if (province === 'Mashonaland East') {
+                districts = ['Chikomba', 'Goromonzi', 'Hwedza', 'Mudzi', 'Mutoko', 'Marondera', 'Murehwa', 'Seke', 'Uzumba-Maramba-Pfungwe'];
+                farmingRegions = {
+                    'Chikomba': 'Natural Region 2',
+                    'Goromonzi': 'Natural Region 2',
+                    'Hwedza': 'Natural Region 2',
+                    'Mudzi': 'Natural Region 4',
+                    'Mutoko': 'Natural Region 4',
+                    'Marondera': 'Natural Region 2',
+                    'Murehwa': 'Natural Region 2',
+                    'Seke': 'Natural Region 2',
+                    'Uzumba-Maramba-Pfungwe': 'Natural Region 4'
+                };
+                crops = {
+                    "r1": "Coffee, Tea, Bananas, Apples, Potatoes, Peas, Vegetables, Proteas",
+                    "r2": "Maize, Cotton, Groundnuts, Sunflowers",
+                    "r3": "Tobacco, Maize, Cotton, Wheat, Soybeans, Sorghum, Groundnuts",
+                    "r4": "Drought-tolerant Maize, Sorghum, Pearl Millet, Finger Millet",
+                    "r5": "Cattle, Game-ranching"
+                };
+            }
+            // Add more provinces and their respective districts/farming regions as needed
+
+            // Populate district options dynamically
+            districts.forEach(district => {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+
+            // Show farming region and update crops when a district is selected
+            districtSelect.addEventListener('change', function () {
+                const selectedDistrict = districtSelect.value;
+                const farmingRegion = farmingRegions[selectedDistrict];
+
+                // Show the farming region section
+                if (farmingRegion) {
+                    farmingRegionDiv.style.display = 'block';
+                    farmingRegionLabel.textContent = `Farming Region: ${farmingRegion}`;
+
+                    // Clear previous crop options
+                    cropsSelect.innerHTML = '<option value="" disabled selected>Select crop type</option>';
+
+                    // Get the corresponding crops for the farming region
+                    const selectedCrops = crops[`r${farmingRegion.charAt(farmingRegion.length - 1)}`]; // Mapping 'r1', 'r2', etc.
+                    const cropOptions = selectedCrops.split(', ');
+
+                    cropOptions.forEach(crop => {
+                        const option = document.createElement('option');
+                        option.value = crop;
+                        option.textContent = crop;
+                        cropsSelect.appendChild(option);
+                    });
+                } else {
+                    // Hide the farming region section if no farming region is found
+                    farmingRegionDiv.style.display = 'none';
+                }
+            });
+        }
+
+
+    </script>
+
+</body>
+
+</html>

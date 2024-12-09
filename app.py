@@ -1,0 +1,252 @@
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+import plotly.express as px
+import os
+import pickle
+import numpy as np
+import joblib
+import mysql.connector
+import psycopg2
+from psycopg2 import sql
+
+
+
+# Create Flask app
+app = Flask(__name__)
+app.secret_key = '011235813'  # Required for flashing messages
+
+
+# Connection string
+DATABASE_URL = "postgresql://laaosdatabase_user:ntDL9GOqaQzq3LmHqvhlHXEHyfj6QzZb@dpg-ctbjr9hu0jms73davdg0-a.oregon-postgres.render.com/laaosdatabase"
+
+try:
+    # Connect using the URL
+    conn = psycopg2.connect(DATABASE_URL)
+    print("Connected to the database successfully!")
+
+
+    # Create a cursor object
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM registration;")
+
+    rows = cursor.fetchall()
+
+    # Print the rows
+    for row in rows:
+        print(row)  # You can format it as needed
+
+except Exception as e:
+    print("Error connecting to the database:", e)
+
+
+# Sample crop options
+crops = {
+    "r1": "Coffee, Tea, Bananas, Apples, Potatoes, Peas, Vegetables, Proteas",
+    "r2": "Maize, Cotton, Groundnuts, Sunflowers",
+    "r3": "Tobacco, Maize, Cotton, Wheat, Soybeans, Sorghum, Groundnuts",
+    "r4": "Drought-tolerant Maize, Sorghum, Pearl Millet, Finger Millet",
+    "r5": "Cattle, Game-ranching"
+}
+
+recommendations = {}
+
+# Model initialization
+model = joblib.load(open("./random_forest_model.pkl", "rb"))
+kmeans = joblib.load(open("./kmean_Model.pkl", "rb"))
+
+
+@app.route("/")
+def index():
+    return render_template("login.html")
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        try:
+            # Connect to the database
+            conn = psycopg2.connect(DATABASE_URL)
+            cursor = conn.cursor()
+
+            # Check if the username and password match any record
+            query = sql.SQL("SELECT * FROM registration WHERE username = %s AND password = %s")
+            cursor.execute(query, (username, password))
+            user = cursor.fetchone()
+
+            if user:
+                # User found, login successful
+                return redirect(url_for('back_to_index2', username = username))  # Redirect back to login page
+           
+            else:
+                # User not found
+                flash("Invalid username or password.", "danger")
+                return redirect(url_for('login'))  # Redirect back to login page
+
+        except Exception as e:
+            print("Error connecting to the database:", e)
+            flash("Error occurred during login. Please try again.", "danger")
+            return redirect(url_for('login'))
+        finally:
+            if conn:
+                cursor.close()
+                conn.close()
+
+
+    elif request.method == "GET":
+        try:
+            username = session.get('username')  # Get the 'username' from the session
+            return render_template('index2.html', username=username)
+        except Exception as e:
+            print("Error connecting to the database:", e)
+            flash("Error occurred during login. Please try again.", "danger")
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    username = session.get('username')  # Retrieve username from the session
+    if username:
+        session.pop('username', None)  # Remove username from session (logout)
+    return redirect(url_for('index'))  # Redirect to the index or home page
+
+@app.route("/home", methods=["GET","POST"])
+def back_to_index2():
+    username = request.args.get('username')  # Get the 'username' parameter from the URL
+
+    return render_template("index2.html", username = username)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Get form data
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        try:
+            # Connect to the database
+            conn = psycopg2.connect(DATABASE_URL)
+            cursor = conn.cursor()
+            print("Connected to the database successfully!")
+
+            # SQL query to insert data into the 'registration' table
+            insert_query = """
+            INSERT INTO registration (username, email, password)
+            VALUES (%s, %s, %s);
+            """
+
+            # Execute the query with the form data
+            cursor.execute(insert_query, (username, email, password))
+            conn.commit()  # Commit the changes
+            print("Data inserted successfully!")
+
+        except Exception as e:
+            print("Error inserting data into the database:", e)
+
+        # Return a success message or redirect after successful registration
+        return "Registration successful!"
+
+    # Render the registration form for GET requests
+    return render_template('register.html')
+
+@app.route("/recommendation", methods=["POST"])
+def back_to_reco():
+    # Handle form submission, if necessary
+    return redirect(url_for("index2"))  # Redirect to index2.html
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    float_features = [float(x) for x in request.form.values()]
+    features = [np.array(float_features)]
+    prediction = model.predict(features)
+
+    # Map the predicted value to the actual crop using if-else statements
+    if prediction[0] == 0:
+        actual_value = (
+            "Coffee, Tea, Bananas, Apples, Potatoes, Peas, Vegetables, Proteas"
+        )
+    elif prediction[0] == 1:
+        actual_value = "Tobacco, Maize, Cotton, Wheat, Soybeans, Sorghum, Groundnuts"
+    elif prediction[0] == 2:
+        actual_value = "Maize, Cotton, Groundnuts, Sunflowers"
+    elif prediction[0] == 3:
+        actual_value = "Drought-tolerant Maize, Sorghum, Pearl Millet, Finger Millet"
+    elif prediction[0] == 4:
+        actual_value = "Cattle, Game-ranching"
+    else:
+        actual_value = "Unknown crop"
+
+    return render_template(
+        "results.html", prediction_text=f"The Predicted Crop is {actual_value}"
+    )
+
+
+@app.route("/allocate", methods=["POST"])
+def allocate():
+    float_features = [float(x) for x in request.form.values()]
+    features = [np.array(float_features)]
+    prediction = kmeans.predict(features)
+
+    # Map the predicted value to the actual region using if-else statements
+    if prediction[0] == 0:
+        actual_value = "NR II ,NR III, NR I"
+    elif prediction[0] == 1:
+        actual_value = "NR IV, NR V"
+    elif prediction[0] == 2:
+        actual_value = "NR III, NR IV, NR II"
+    elif prediction[0] == 3:
+        actual_value = "NR I, NR II"
+    else:
+        actual_value = "Unknown region"
+
+    return render_template(
+        "results.html",
+        prediction_text=f"The Allocated Region is {actual_value}",
+        crops=crops,
+        recommendations = recommendations
+    )
+
+
+@app.route("/optimize_land", methods=["POST"])
+def optimize_land():
+    recommendations = {}
+    crop_livestock = request.form["crop-livestock"]
+    total_hectares = int(request.form["total-hectares"])
+    farmable_hectares = int(request.form["farmable-hectares"])
+    plot_div = ""
+
+    #recommendations = []
+
+    selected_crops = request.form.get('crop-livestock')
+    total_hectares = float(request.form.get('total-hectares', 0))
+    farmable_hectares = float(request.form.get('farmable-hectares', 0))
+
+    if selected_crops and farmable_hectares > 0:
+        crop_list = crops[selected_crops].split(", ")
+        hectares_per_crop = farmable_hectares / len(crop_list)
+        recommendations = {crop: hectares_per_crop for crop in crop_list}
+        
+        # Create a pie chart
+        fig = px.pie(names=list(recommendations.keys()), values=list(recommendations.values()), title='Crop Distribution on Farmable Hectares')
+        plot_div = fig.to_html(full_html=False)
+# Add more conditions for other crop/livestock selections
+
+    return render_template(
+        "results.html",
+        crop_livestock = selected_crops,
+        crops=crops,
+        recommendations=recommendations,
+        total_hectares=total_hectares,
+        farmable_hectares=farmable_hectares,
+        plot_div=plot_div
+    )
+    
+def past_recommendations():
+    # Fetch past recommendations from the database
+    #past_recommendations = Recommendation.query.all()
+    return render_template('data.html', recommendations=past_recommendations)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=55)
