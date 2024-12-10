@@ -368,7 +368,7 @@
                                     <!-- Crop options will be populated dynamically -->
                                 </select>
                             </div>
-                            
+                        
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="farmingtype" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Farming Type</label>
                                 <select name="farmingtype" id="farmingtype"
@@ -1238,74 +1238,35 @@
 
 
 
-// Event listener for the allocate button
-const allocateButton = document.getElementById('allocateButton');
-allocateButton.addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent default form submission
+      document.getElementById("allocateButton").addEventListener("click", function (e) {
+            e.preventDefault(); // Prevent page reload
 
-    // Retrieve form inputs
-    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
-    const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
-    const crops = document.getElementById('crops').value;
-    const farmingType = document.getElementById('farmingtype').value;
-    const machinery = document.querySelector('input[name="machinery"]:checked')?.value || 'No';
-    const inputs = document.querySelector('input[name="inputs"]:checked')?.value || 'No';
+            // Retrieve input values
+            const availableCapital = parseFloat(document.getElementById("availableCapital").value);
+            const farmingType = document.getElementById("farmingtype").value;
+            const hasMachinery = document.getElementById("machinery").value === "Yes";
 
-    // Assign weights to each input
-    let weight = 1; // Base weight
+            // Validate available capital
+            if (isNaN(availableCapital) || availableCapital <= 0) {
+                alert("Please enter a valid available capital.");
+                return;
+            }
 
-    // Province weight adjustment
-    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        weight += 0.5; // Higher weight for these provinces
-    } else {
-        weight += 0.1; // Lower weight for other provinces
-    }
+            // Calculation logic
+            let allocatedLand = availableCapital / 1000; // Base allocation
+            if (farmingType === "Commercial") {
+                allocatedLand *= 1.5; // Bonus for commercial farming
+            }
+            if (hasMachinery) {
+                allocatedLand *= 1.2; // Bonus for having machinery
+            }
 
-    // Crop-specific cost adjustment
-    const cropCosts = {
-        Sugarcane: 20000, // Base development cost for sugarcane
-        Maize: 1602.20,   // Production cost for maize
-        Default: 5000     // Approximate cost for other crops
-    };
-    const cropCost = cropCosts[crops] || cropCosts.Default;
-    weight += cropCost <= 5000 ? 0.3 : cropCost <= 10000 ? 0.2 : -0.2;
-
-    // Farming type adjustment
-    if (farmingType === 'Commercial') {
-        weight += 0.5; // Commercial farming gets more weight
-    } else if (farmingType === 'Substrate') {
-        weight += 0.3; // Substrate farming slightly lower
-    }
-
-    // Machinery availability adjustment
-    if (machinery === 'Yes') {
-        weight += 0.4; // Higher weight if machinery is available
-    } else {
-        weight -= 0.2; // Lower weight if no machinery
-    }
-
-    // Inputs availability adjustment
-    if (inputs === 'Yes') {
-        weight += 0.3; // Increase weight more significantly if inputs are available
-    } else {
-        weight -= 0.2; // Decrease weight if no inputs
-    }
-
-    // Log weight for debugging
-    console.log(`Final weight after adjustments: ${weight}`);
-
-    // Final land allocation calculation
-    const allocatedLand = totalHectares * weight;
-
-    // Display the final allocated land
-    const processedCapitalDiv = document.getElementById('processedCapitalDiv');
-    const processedCapitalInput = document.getElementById('processedCapital');
-    processedCapitalDiv.style.display = 'block';
-    processedCapitalInput.value = allocatedLand.toFixed(2); // Update only the input field
-});
-
-
+            // Display result
+            const resultDiv = document.getElementById("resultDiv");
+            const processedCapitalField = document.getElementById("processedCapital");
+            processedCapitalField.value = allocatedLand.toFixed(2); // Round to 2 decimal places
+            resultDiv.classList.remove("hidden"); // Show result div
+        });
 
 
 
