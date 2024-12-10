@@ -1280,16 +1280,16 @@ allocateButton.addEventListener('click', function (event) {
 
     // Machinery availability adjustment
     if (machinery === 'Yes') {
-        adjustmentFactor += 0.2; // Boost allocation if machinery is available
+        adjustmentFactor -= 0.4; // Boost allocation if machinery is available
     } else {
-        adjustmentFactor -= 0.1; // Reduce allocation if no machinery
+        adjustmentFactor += 0.2; // Reduce allocation if no machinery
     }
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        adjustmentFactor += 0.1; // Slight boost for available inputs
+        adjustmentFactor -= 0.3; // Slight boost for available inputs
     } else {
-        adjustmentFactor -= 0.05; // Slight reduction for lack of inputs
+        adjustmentFactor += 0.1; // Slight reduction for lack of inputs
     }
 
     // Calculate maximum land allocation based on capital and cost
