@@ -1292,8 +1292,10 @@ allocateButton.addEventListener('click', function (event) {
     // Display the final allocated land
     const processedCapitalDiv = document.getElementById('processedCapitalDiv');
     processedCapitalDiv.style.display = 'block';
-    processedCapitalDiv.textContent = `Allocated Land: ${allocatedLand.toFixed(2)} hectares`;
+    const processedCapitalInput = document.getElementById('processedCapital');
+    processedCapitalInput.value = allocatedLand.toFixed(2); // Set the calculated value
 });
+
 
 
     document.getElementById("downloadButton").addEventListener("click", function(event) {
