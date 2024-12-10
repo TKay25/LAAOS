@@ -1266,16 +1266,16 @@ allocateButton.addEventListener('click', function (event) {
 
     // Province adjustment
     if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        adjustmentFactor += 0.2; // Favorable provinces
+        adjustmentFactor += 0.1; // Favorable provinces
     } else {
-        adjustmentFactor -= 0.1; // Less favorable provinces
+        adjustmentFactor -= 0.2; // Less favorable provinces
     }
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
-        adjustmentFactor += 0.3; // Higher adjustment for commercial farming
+        adjustmentFactor += 0.1; // Higher adjustment for commercial farming
     } else if (farmingType === 'Subsistance') {
-        adjustmentFactor += 0.1; // Slightly favorable for substrate
+        adjustmentFactor += 0.2; // Slightly favorable for substrate
     }
 
     // Machinery availability adjustment
