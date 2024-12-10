@@ -109,6 +109,9 @@ def back_to_index2():
 def register():
     if request.method == 'POST':
         # Get form data
+        name = request.form['name']
+        surname = request.form['surname']
+        IDNo = request.form['IDNo']
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -121,12 +124,12 @@ def register():
 
             # SQL query to insert data into the 'registration' table
             insert_query = """
-            INSERT INTO registration (username, email, password)
-            VALUES (%s, %s, %s);
+            INSERT INTO registration (name, surname, IDNo, username, email, password)
+            VALUES (%s, %s, %s, %s, %s, %s);
             """
 
             # Execute the query with the form data
-            cursor.execute(insert_query, (username, email, password))
+            cursor.execute(insert_query, (name, surname, IDNo, username, email, password))
             conn.commit()  # Commit the changes
             print("Data inserted successfully!")
 
