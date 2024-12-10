@@ -1238,42 +1238,70 @@
 
 
 
-      document.getElementById("allocateButton").addEventListener("click", function (e) {
-            e.preventDefault(); // Prevent page reload
+// Event listener for the allocate button
+const allocateButton = document.getElementById('allocateButton');
+allocateButton.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default form submission
 
-            // Retrieve input values
-            const availableCapital = parseFloat(document.getElementById("availableCapital").value);
-            const farmingType = document.getElementById("farmingtype").value;
-            const hasMachinery = document.getElementById("machinery").value === "Yes";
+    // Retrieve form inputs
+    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
+    const province = document.getElementById('province').value;
+    const district = document.getElementById('district').value;
+    const crops = document.getElementById('crops').value;
+    const farmingType = document.getElementById('farmingtype').value;
+    const hasMachinery = document.getElementById("machinery").value === "Yes";
+    const inputs = document.querySelector('input[name="inputs"]:checked')?.value || 'No';
 
-            // Validate available capital
-            if (isNaN(availableCapital) || availableCapital <= 0) {
-                alert("Please enter a valid available capital.");
-                return;
-            }
+    // Assign weights to each input
+    let weight = 1; // Base weight
 
-            // Calculation logic
-            let allocatedLand = availableCapital / 1000; // Base allocation
-            if (farmingType === "Commercial") {
-                allocatedLand *= 1.5; // Bonus for commercial farming
-            }
-            if (hasMachinery) {
-                allocatedLand *= 1.2; // Bonus for having machinery
-            }
+    // Province weight adjustment
+    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
+        weight += 0.5; // Higher weight for these provinces
+    } else {
+        weight += 0.1; // Lower weight for other provinces
+    }
 
-            // Display result
-            // Display result
-            const resultDiv = document.getElementById("resultDiv");
-            const processedCapitalField = document.getElementById("processedCapital");
-            
-            // Assuming 'allocatedLand' is the result you want to display
-            processedCapitalField.value = allocatedLand.toFixed(2); // Round to 2 decimal places
-            
-            // Show the result div and display the result
-            resultDiv.classList.remove("hidden"); // Remove the 'hidden' class from resultDiv
-            document.getElementById("processedCapitalDiv").style.display = "block"; // Make the processedCapitalDiv visible
+    // Crop-specific cost adjustment
+    const cropCosts = {
+        Sugarcane: 20000, // Base development cost for sugarcane
+        Maize: 1602.20,   // Production cost for maize
+        Default: 5000     // Approximate cost for other crops
+    };
+    const cropCost = cropCosts[crops] || cropCosts.Default;
+    weight += cropCost <= 5000 ? 0.3 : cropCost <= 10000 ? 0.2 : -0.2;
 
-        });
+    // Farming type adjustment
+    if (farmingType === 'Commercial') {
+        weight += 0.5; // Commercial farming gets more weight
+    } else if (farmingType === 'Substrate') {
+        weight += 0.3; // Substrate farming slightly lower
+    }
+
+   if (hasMachinery) {
+        allocatedLand *= 1.2; // Bonus for having machinery
+    }
+
+    // Inputs availability adjustment
+    if (inputs === 'Yes') {
+        weight += 0.3; // Increase weight more significantly if inputs are available
+    } else {
+        weight -= 0.2; // Decrease weight if no inputs
+    }
+
+    // Log weight for debugging
+    console.log(`Final weight after adjustments: ${weight}`);
+
+    // Final land allocation calculation
+    const allocatedLand = totalHectares * weight;
+
+    // Display the final allocated land
+    const processedCapitalDiv = document.getElementById('processedCapitalDiv');
+    const processedCapitalInput = document.getElementById('processedCapital');
+    processedCapitalDiv.style.display = 'block';
+    processedCapitalInput.value = allocatedLand.toFixed(2); // Update only the input field
+});
+
 
 
 
