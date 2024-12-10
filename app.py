@@ -22,17 +22,13 @@ try:
     print("Connected to the database successfully!")
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS employees;")
-    conn.commit()
-
-
     # SQL query to create a table
     create_table_query = """
     CREATE TABLE registration (
         name VARCHAR(100) NOT NULL,
         surname VARCHAR(100) NOT NULL,
         username VARCHAR(100) UNIQUE NOT NULL,
-        IDNo INT NOT NULL,
+        IDNo VARCHAR(100) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password VARCHAR(100) NOT NULL
     );
