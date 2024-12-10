@@ -1235,85 +1235,74 @@
 
 <script>
 
+
+
+ 
 // Event listener for the allocate button
 const allocateButton = document.getElementById('allocateButton');
 allocateButton.addEventListener('click', function (event) {
     event.preventDefault(); // Prevent default form submission
 
     // Retrieve form inputs
-    const totalCapital = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as funds
+    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
     const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
     const crops = document.getElementById('crops').value;
     const farmingType = document.getElementById('farmingtype').value;
     const machinery = document.getElementById('machinery').value;
     const inputs = document.getElementById('inputs').value;
 
-    // Crop-specific cost per hectare
-    const cropCosts = {
-        R1: 12000, // Average cost for Coffee, Tea, Bananas, etc.
-        R2: 2500,  // Average cost for Maize, Cotton, etc.
-        R3: 3000,  // Average cost for Tobacco, Soybeans, etc.
-        R4: 1500,  // Average cost for drought-tolerant crops
-        R5: 0      // Special case for cattle/game-ranching
-    };
-
-    // Assign crop cost based on selected crop region
-    let perHectareCost = cropCosts[crops] || 2000; // Default to $2,000 if no specific crop region is selected
-
-    // Adjustments for factors
+    // Assign base weights and scale effects
     let weight = 1; // Base weight
 
     // Province weight adjustment
     if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        weight += 0.5; // Favorable provinces
+        weight += 0.5; // Higher weight for favorable provinces
     } else {
-        weight += 0.2; // Less favorable provinces
+        weight -= 0.2; // Lower weight for less favorable provinces
+    }
+
+    // Crop type adjustment
+    if (crops === 'Maize' || crops === 'Wheat') {
+        weight += 0.4; // Higher weight for staple crops
+    } else {
+        weight += 0.2; // Moderate weight for other crops
     }
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
-        weight += 0.5; // Commercial farming gets a higher weight
+        weight += 0.5; // Significant boost for commercial farming
     } else if (farmingType === 'Substrate') {
-        weight += 0.3; // Substrate farming slightly lower
+        weight += 0.3; // Moderate boost for substrate farming
     }
 
     // Machinery availability adjustment
     if (machinery === 'Yes') {
-        weight += 0.4; // Significant boost for available machinery
+        weight += 0.4; // Higher weight for available machinery
     } else {
-        weight -= 0.2; // Reduction for lack of machinery
+        weight -= 0.3; // Lower weight if no machinery
     }
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        weight += 0.2; // Slight boost for available inputs
+        weight += 0.3; // Moderate boost for available inputs
     } else {
-        weight -= 0.1; // Reduction for lack of inputs
+        weight -= 0.2; // Lower weight for unavailable inputs
     }
 
-    // Special case for livestock (R5)
-    if (crops === 'R5') {
-        const allocatedLand = Math.max(totalCapital / 1000, 10); // Allocate based on $1,000 per unit of land
-        displayResult(allocatedLand);
-        return;
-    }
+    // Ensure weight is bounded within a reasonable range
+    weight = Math.max(0.5, weight); // Minimum weight is 0.5
+    weight = Math.min(2, weight); // Maximum weight is 2
 
-    // Calculate maximum land allocation based on capital and cost
-    const adjustedCostPerHectare = perHectareCost * weight;
-    const maxLandAllocation = totalCapital / adjustedCostPerHectare;
+    // Final land allocation calculation
+    const allocatedLand = totalHectares * weight;
 
     // Display the final allocated land
-    displayResult(maxLandAllocation);
-});
-
-// Function to display the result in the processedCapitalDiv
-function displayResult(allocatedLand) {
     const processedCapitalDiv = document.getElementById('processedCapitalDiv');
     processedCapitalDiv.style.display = 'block';
     const processedCapitalInput = document.getElementById('processedCapital');
-    processedCapitalInput.value = allocatedLand > 0 ? allocatedLand.toFixed(2) : 0;
-}
+    processedCapitalInput.value = allocatedLand.toFixed(2); // Update input value
+});
+
 
 
 
