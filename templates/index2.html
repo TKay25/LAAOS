@@ -1234,13 +1234,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
+
 // Event listener for the allocate button
 const allocateButton = document.getElementById('allocateButton');
 allocateButton.addEventListener('click', function (event) {
     event.preventDefault(); // Prevent default form submission
 
     // Retrieve form inputs
-    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
+    const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0;
     const province = document.getElementById('province').value;
     const district = document.getElementById('district').value;
     const crops = document.getElementById('crops').value;
@@ -1248,53 +1249,57 @@ allocateButton.addEventListener('click', function (event) {
     const machinery = document.getElementById('machinery').value;
     const inputs = document.getElementById('inputs').value;
 
-    // Assign weights to each input
-    let weight = 1; // Base weight
+    // Crop costs per hectare (adjusted based on provided data)
+    const cropCosts = {
+        Sugarcane: 20000 + 17500, // Development + average production cost
+        Maize: 1602.20,           // Production cost
+    };
 
-    // Province weight adjustment
+    // Assign base costs based on crop selection
+    const perHectareCost = cropCosts[crops] || 0;
+
+    // Adjustments based on inputs
+    let adjustmentFactor = 1; // Base factor
+
+    // Province adjustment
     if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        weight += 0.5; // Higher weight for these provinces
+        adjustmentFactor += 0.2; // Favorable provinces
     } else {
-        weight += 0.1; // Lower weight for other provinces
-    }
-
-    // Crop type adjustment
-    if (crops === 'Maize' || crops === 'Wheat') {
-        weight += 0.3; // Staple crops
-    } else {
-        weight += 0.1; // Other crops
+        adjustmentFactor -= 0.1; // Less favorable provinces
     }
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
-        weight += 0.5; // Commercial farming gets more weight
+        adjustmentFactor += 0.3; // Higher adjustment for commercial farming
     } else if (farmingType === 'Substrate') {
-        weight += 0.3; // Substrate farming slightly lower
+        adjustmentFactor += 0.1; // Slightly favorable for substrate
     }
 
     // Machinery availability adjustment
     if (machinery === 'Yes') {
-        weight += 0.4; // Higher weight if machinery is available
+        adjustmentFactor += 0.2; // Boost allocation if machinery is available
     } else {
-        weight -= 0.2; // Lower weight if no machinery
+        adjustmentFactor -= 0.1; // Reduce allocation if no machinery
     }
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        weight += 0.2; // Slightly higher weight if inputs are available
+        adjustmentFactor += 0.1; // Slight boost for available inputs
     } else {
-        weight -= 0.1; // Lower weight if no inputs
+        adjustmentFactor -= 0.05; // Slight reduction for lack of inputs
     }
 
-    // Final land allocation calculation
-    const allocatedLand = totalHectares * weight;
+    // Calculate maximum land allocation based on capital and cost
+    const adjustedCostPerHectare = perHectareCost * adjustmentFactor;
+    const maxLandAllocation = availableCapital / adjustedCostPerHectare;
 
     // Display the final allocated land
     const processedCapitalDiv = document.getElementById('processedCapitalDiv');
     processedCapitalDiv.style.display = 'block';
     const processedCapitalInput = document.getElementById('processedCapital');
-    processedCapitalInput.value = allocatedLand.toFixed(2); // Set the calculated value
+    processedCapitalInput.value = maxLandAllocation > 0 ? maxLandAllocation.toFixed(2) : 0;
 });
+
 
 
 
