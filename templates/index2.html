@@ -1234,17 +1234,67 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-    document.getElementById('allocateButton').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-        
-        const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0; // Get the input value
-        const processedCapital = availableCapital / 2; // Calculate the processed capital
+// Event listener for the allocate button
+const allocateButton = document.getElementById('allocateButton');
+allocateButton.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default form submission
 
-        // Display the processed capital
-        const processedCapitalDiv = document.getElementById('processedCapitalDiv');
-        processedCapitalDiv.style.display = 'block';
-        document.getElementById('processedCapital').value = processedCapital.toFixed(2);
-    });
+    // Retrieve form inputs
+    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
+    const province = document.getElementById('province').value;
+    const district = document.getElementById('district').value;
+    const crops = document.getElementById('crops').value;
+    const farmingType = document.getElementById('farmingtype').value;
+    const machinery = document.getElementById('machinery').value;
+    const inputs = document.getElementById('inputs').value;
+
+    // Assign weights to each input
+    let weight = 1; // Base weight
+
+    // Province weight adjustment
+    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
+        weight += 0.5; // Higher weight for these provinces
+    } else {
+        weight += 0.1; // Lower weight for other provinces
+    }
+
+    // Crop type adjustment
+    if (crops === 'Maize' || crops === 'Wheat') {
+        weight += 0.3; // Staple crops
+    } else {
+        weight += 0.1; // Other crops
+    }
+
+    // Farming type adjustment
+    if (farmingType === 'Commercial') {
+        weight += 0.5; // Commercial farming gets more weight
+    } else if (farmingType === 'Substrate') {
+        weight += 0.3; // Substrate farming slightly lower
+    }
+
+    // Machinery availability adjustment
+    if (machinery === 'Yes') {
+        weight += 0.4; // Higher weight if machinery is available
+    } else {
+        weight -= 0.2; // Lower weight if no machinery
+    }
+
+    // Inputs availability adjustment
+    if (inputs === 'Yes') {
+        weight += 0.2; // Slightly higher weight if inputs are available
+    } else {
+        weight -= 0.1; // Lower weight if no inputs
+    }
+
+    // Final land allocation calculation
+    const allocatedLand = totalHectares * weight;
+
+    // Display the final allocated land
+    const processedCapitalDiv = document.getElementById('processedCapitalDiv');
+    processedCapitalDiv.style.display = 'block';
+    processedCapitalDiv.textContent = `Allocated Land: ${allocatedLand.toFixed(2)} hectares`;
+});
+
 
     document.getElementById("downloadButton").addEventListener("click", function(event) {
     event.preventDefault(); // Prevent the form from submitting
