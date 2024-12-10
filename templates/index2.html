@@ -1275,19 +1275,19 @@ allocateButton.addEventListener('click', function (event) {
     if (farmingType === 'Commercial') {
         adjustmentFactor += 0.1; // Higher adjustment for commercial farming
     } else if (farmingType === 'Subsistance') {
-        adjustmentFactor += 0.2; // Slightly favorable for substrate
+        adjustmentFactor += 0.3; // Slightly favorable for substrate
     }
 
     // Machinery availability adjustment
     if (machinery === 'Yes') {
-        adjustmentFactor -= 0.25; // Boost allocation if machinery is available
+        adjustmentFactor -= 0.1; // Boost allocation if machinery is available
     } else {
         adjustmentFactor += 0.2; // Reduce allocation if no machinery
     }
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        adjustmentFactor -= 0.2; // Slight boost for available inputs
+        adjustmentFactor -= 0.1; // Slight boost for available inputs
     } else {
         adjustmentFactor += 0.1; // Slight reduction for lack of inputs
     }
