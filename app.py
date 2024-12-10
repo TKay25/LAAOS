@@ -21,6 +21,8 @@ try:
     conn = psycopg2.connect(DATABASE_URL)
     print("Connected to the database successfully!")
 
+    cursor.execute("DROP TABLE IF EXISTS registration;")
+    conn.commit()
 
     # Create a cursor object
     cursor = conn.cursor()
