@@ -27,7 +27,7 @@ try:
 
     # SQL query to create a table
     create_table_query = """
-    CREATE TABLE registraion (
+    CREATE TABLE registration (
         name VARCHAR(100) NOT NULL,
         surname VARCHAR(100) NOT NULL,
         username VARCHAR(100) NOT NULL,
