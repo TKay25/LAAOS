@@ -6,12 +6,9 @@ import joblib
 import psycopg2
 from psycopg2 import sql
 
-
-
 # Create Flask app
 app = Flask(__name__)
 app.secret_key = '011235813'  # Required for flashing messages
-
 
 # Connection string
 DATABASE_URL = "postgresql://laaosdatabase_user:ntDL9GOqaQzq3LmHqvhlHXEHyfj6QzZb@dpg-ctbjr9hu0jms73davdg0-a.oregon-postgres.render.com/laaosdatabase"
@@ -20,27 +17,6 @@ try:
     # Connect using the URL
     conn = psycopg2.connect(DATABASE_URL)
     print("Connected to the database successfully!")
-    cursor = conn.cursor()
-
-    # SQL query to create a table
-    create_table_query = """
-    CREATE TABLE registration (
-        name VARCHAR(100) NOT NULL,
-        surname VARCHAR(100) NOT NULL,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        IDNo VARCHAR(100) NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(100) NOT NULL
-    );
-    """
-
-    # Execute the query
-    cursor.execute(create_table_query)
-    conn.commit()  # Commit the changes
-    print("Table 'registration' created successfully!")
-
-
-    # Create a cursor object
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM registration;")
 
