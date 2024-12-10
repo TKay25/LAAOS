@@ -1322,12 +1322,21 @@ allocateButton.addEventListener('click', function (event) {
     const province = document.getElementById("province").value;
     const district = document.getElementById("district").value;
     const crops = document.getElementById("crops").value;
+    const inputs = document.getElementById("inputs").value;
+    const machinery = document.getElementById("machinery").value;
+    const avcapital = document.getElementById("availableCapital").value;
+    const land = document.getElementById("processedCapital").value;
 
     // Create a formatted string to hold the form data
     const formData = `
         <b>Province of Interest:</b> ${province}
         <b>District of Interest:</b> ${district}
         <b>Crops:</b> ${crops}
+        <b>You have Inputs? :</b> ${inputs}
+        <b>You have Machinery? :</b> ${machinery}
+        <b>Available Capital :</b> ${avcapital}
+        <b>Land Allocated (Ha) :</b> ${land}
+
     `;
 
     // Initialize jsPDF instance
@@ -1354,6 +1363,11 @@ allocateButton.addEventListener('click', function (event) {
         Province of Interest: ${province}
         District of Interest: ${district}
         Crops: ${crops}
+        You have Inputs?: ${inputs}
+        You have Machinery?: ${machinery}
+        Available Capital: ${avcapital}
+        Land Allocated (Ha): ${land}
+
     `;
     doc.text(formattedFormData, 10, 40);
 
