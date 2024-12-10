@@ -1246,62 +1246,60 @@ allocateButton.addEventListener('click', function (event) {
     // Retrieve form inputs
     const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
     const province = document.getElementById('province').value;
+    const district = document.getElementById('district').value;
     const crops = document.getElementById('crops').value;
     const farmingType = document.getElementById('farmingtype').value;
-    const machinery = document.getElementById('machinery').value;
-    const inputs = document.getElementById('inputs').value;
+    const machinery = document.querySelector('input[name="machinery"]:checked')?.value || 'No';
+    const inputs = document.querySelector('input[name="inputs"]:checked')?.value || 'No';
 
-    // Assign base weights and scale effects
+    // Assign weights to each input
     let weight = 1; // Base weight
 
     // Province weight adjustment
     if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        weight += 0.5; // Higher weight for favorable provinces
+        weight += 0.5; // Higher weight for these provinces
     } else {
-        weight -= 0.2; // Lower weight for less favorable provinces
+        weight += 0.1; // Lower weight for other provinces
     }
 
     // Crop type adjustment
     if (crops === 'Maize' || crops === 'Wheat') {
-        weight += 0.4; // Higher weight for staple crops
+        weight += 0.3; // Staple crops
     } else {
-        weight += 0.2; // Moderate weight for other crops
+        weight += 0.1; // Other crops
     }
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
-        weight += 0.5; // Significant boost for commercial farming
+        weight += 0.5; // Commercial farming gets more weight
     } else if (farmingType === 'Substrate') {
-        weight += 0.3; // Moderate boost for substrate farming
+        weight += 0.3; // Substrate farming slightly lower
     }
 
     // Machinery availability adjustment
     if (machinery === 'Yes') {
-        weight += 0.4; // Higher weight for available machinery
+        weight += 0.4; // Higher weight if machinery is available
     } else {
-        weight -= 0.3; // Lower weight if no machinery
+        weight -= 0.2; // Lower weight if no machinery
     }
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        weight += 0.3; // Moderate boost for available inputs
+        weight += 0.2; // Slightly higher weight if inputs are available
     } else {
-        weight -= 0.2; // Lower weight for unavailable inputs
+        weight -= 0.1; // Lower weight if no inputs
     }
-
-    // Ensure weight is bounded within a reasonable range
-    weight = Math.max(0.5, weight); // Minimum weight is 0.5
-    weight = Math.min(2, weight); // Maximum weight is 2
 
     // Final land allocation calculation
     const allocatedLand = totalHectares * weight;
 
     // Display the final allocated land
     const processedCapitalDiv = document.getElementById('processedCapitalDiv');
-    processedCapitalDiv.style.display = 'block';
     const processedCapitalInput = document.getElementById('processedCapital');
-    processedCapitalInput.value = allocatedLand.toFixed(2); // Update input value
+    processedCapitalDiv.style.display = 'block';
+    processedCapitalInput.value = allocatedLand.toFixed(2); // Update only the input field
 });
+
 
 
 
