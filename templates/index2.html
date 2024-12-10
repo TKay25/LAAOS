@@ -1244,68 +1244,64 @@ allocateButton.addEventListener('click', function (event) {
     event.preventDefault(); // Prevent default form submission
 
     // Retrieve form inputs
-    const totalHectares = parseFloat(document.getElementById('availableCapital').value) || 0; // Treating availableCapital as land in hectares
+    const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0;
     const province = document.getElementById('province').value;
     const district = document.getElementById('district').value;
     const crops = document.getElementById('crops').value;
     const farmingType = document.getElementById('farmingtype').value;
-    const machinery = document.getElementById("machinery").value;
-    const inputs = document.getElementById("inputs").value;
+    const machinery = document.getElementById('machinery').value;
+    const inputs = document.getElementById('inputs').value;
 
-    // Assign weights to each input
-    let weight = 1; // Base weight
-
-    // Province weight adjustment
-    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        weight += 0.5; // Higher weight for these provinces
-    } else {
-        weight += 0.1; // Lower weight for other provinces
-    }
-
-    // Crop-specific cost adjustment
+    // Crop costs per hectare (adjusted based on provided data)
     const cropCosts = {
-        Sugarcane: 20000, // Base development cost for sugarcane
-        Maize: 1602.20,   // Production cost for maize
-        Default: 5000     // Approximate cost for other crops
+        Sugarcane: 20000 + 17500, // Development + average production cost
+        Maize: 1602.20,           // Production cost
     };
-    const cropCost = cropCosts[crops] || cropCosts.Default;
-    weight += cropCost <= 5000 ? 0.3 : cropCost <= 10000 ? 0.2 : -0.2;
+
+    // Assign base costs based on crop selection
+    const perHectareCost = cropCosts[crops] || 0;
+
+    // Adjustments based on inputs
+    let adjustmentFactor = 1; // Base factor
+
+    // Province adjustment
+    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
+        adjustmentFactor += 0.2; // Favorable provinces
+    } else {
+        adjustmentFactor -= 0.1; // Less favorable provinces
+    }
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
-        weight += 0.5; // Commercial farming gets more weight
-    } else if (farmingType === 'Subsistance) {
-        weight += 0.3; // Substrate farming slightly lower
+        adjustmentFactor += 0.3; // Higher adjustment for commercial farming
+    } else if (farmingType === 'Subsistance') {
+        adjustmentFactor += 0.1; // Slightly favorable for substrate
     }
 
-    // Inputs availability adjustment
+    // Machinery availability adjustment
     if (machinery === 'Yes') {
-        weight += 0.3; // Increase weight more significantly if inputs are available
+        adjustmentFactor += 0.2; // Boost allocation if machinery is available
     } else {
-        weight -= 0.2; // Decrease weight if no inputs
+        adjustmentFactor -= 0.1; // Reduce allocation if no machinery
     }
 
-    
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        weight += 0.3; // Increase weight more significantly if inputs are available
+        adjustmentFactor += 0.1; // Slight boost for available inputs
     } else {
-        weight -= 0.2; // Decrease weight if no inputs
+        adjustmentFactor -= 0.05; // Slight reduction for lack of inputs
     }
 
-    // Log weight for debugging
-    console.log(`Final weight after adjustments: ${weight}`);
-
-    // Final land allocation calculation
-    const allocatedLand = totalHectares * weight;
+    // Calculate maximum land allocation based on capital and cost
+    const adjustedCostPerHectare = perHectareCost * adjustmentFactor;
+    const maxLandAllocation = availableCapital / adjustedCostPerHectare;
 
     // Display the final allocated land
     const processedCapitalDiv = document.getElementById('processedCapitalDiv');
-    const processedCapitalInput = document.getElementById('processedCapital');
     processedCapitalDiv.style.display = 'block';
-    processedCapitalInput.value = allocatedLand.toFixed(2); // Update only the input field
+    const processedCapitalInput = document.getElementById('processedCapital');
+    processedCapitalInput.value = maxLandAllocation > 0 ? maxLandAllocation.toFixed(2) : 0;
 });
-
 
 
 
