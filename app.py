@@ -57,14 +57,13 @@ def login():
             conn = psycopg2.connect(DATABASE_URL)
             cursor = conn.cursor()
 
-            # Check if the username and password match any record
-            query = sql.SQL("SELECT * FROM registration WHERE username = %s AND password = %s")
+            query = sql.SQL("SELECT username, IDNo, name, surname, email FROM registration WHERE username = %s AND password = %s")
             cursor.execute(query, (username, password))
-            user = cursor.fetchone()
-
+            user = cursor.fetchone()  # Fetch the first result
+            
             if user:
-                # User found, login successful
-                return redirect(url_for('back_to_index2', username = username))  # Redirect back to login page
+                username, IDNo, name, surname, email = user
+                return redirect(url_for('back_to_index2', username = username, name = name, surname = surname, IDNo = IDNo, email = email))  # Redirect back to login page
            
             else:
                 # User not found
@@ -96,8 +95,12 @@ def logout():
 @app.route("/home", methods=["GET","POST"])
 def back_to_index2():
     username = request.args.get('username')  # Get the 'username' parameter from the URL
+    name = request.args.get('name')  # Get the 'username' parameter from the URL
+    surname = request.args.get('surname')  # Get the 'username' parameter from the URL
+    IDNo = request.args.get('IDNo')  # Get the 'username' parameter from the URL
+    email = request.args.get('email')  # Get the 'username' parameter from the URL
 
-    return render_template("index2.html", username = username)
+    return render_template("index2.html", username = username, name = name, surname = surname, IDNo = IDNo, email = email)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -127,7 +130,7 @@ def register():
             conn.commit()  # Commit the changes
             print("Data inserted successfully!")
 
-            return redirect(url_for('back_to_index2', username = username))  # Redirect back to login page
+            return redirect(url_for('back_to_index2', username = username, name = name, surname = surname, IDNo = IDNo, email = email))  # Redirect back to login page
 
         except Exception as e:
             print("Error inserting data into the database:", e)
