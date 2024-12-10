@@ -1249,8 +1249,8 @@ allocateButton.addEventListener('click', function (event) {
     const district = document.getElementById('district').value;
     const crops = document.getElementById('crops').value;
     const farmingType = document.getElementById('farmingtype').value;
-    const hasMachinery = document.getElementById("machinery").value === "Yes";
-    const inputs = document.querySelector('input[name="inputs"]:checked')?.value || 'No';
+    const machinery = document.getElementById("machinery").value;
+    const inputs = document.getElementById("inputs").value;
 
     // Assign weights to each input
     let weight = 1; // Base weight
@@ -1274,14 +1274,18 @@ allocateButton.addEventListener('click', function (event) {
     // Farming type adjustment
     if (farmingType === 'Commercial') {
         weight += 0.5; // Commercial farming gets more weight
-    } else if (farmingType === 'Substrate') {
+    } else if (farmingType === 'Subsistance) {
         weight += 0.3; // Substrate farming slightly lower
     }
 
-   if (hasMachinery) {
-        allocatedLand *= 1.2; // Bonus for having machinery
+    // Inputs availability adjustment
+    if (machinery === 'Yes') {
+        weight += 0.3; // Increase weight more significantly if inputs are available
+    } else {
+        weight -= 0.2; // Decrease weight if no inputs
     }
 
+    
     // Inputs availability adjustment
     if (inputs === 'Yes') {
         weight += 0.3; // Increase weight more significantly if inputs are available
