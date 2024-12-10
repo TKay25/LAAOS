@@ -1237,7 +1237,7 @@
 
 
 
- 
+
 // Event listener for the allocate button
 const allocateButton = document.getElementById('allocateButton');
 allocateButton.addEventListener('click', function (event) {
@@ -1262,12 +1262,14 @@ allocateButton.addEventListener('click', function (event) {
         weight += 0.1; // Lower weight for other provinces
     }
 
-    // Crop type adjustment
-    if (crops === 'Maize' || crops === 'Wheat') {
-        weight += 0.3; // Staple crops
-    } else {
-        weight += 0.1; // Other crops
-    }
+    // Crop-specific cost adjustment
+    const cropCosts = {
+        Sugarcane: 20000, // Base development cost for sugarcane
+        Maize: 1602.20,   // Production cost for maize
+        Default: 5000     // Approximate cost for other crops
+    };
+    const cropCost = cropCosts[crops] || cropCosts.Default;
+    weight += cropCost <= 5000 ? 0.3 : cropCost <= 10000 ? 0.2 : -0.2;
 
     // Farming type adjustment
     if (farmingType === 'Commercial') {
@@ -1285,10 +1287,13 @@ allocateButton.addEventListener('click', function (event) {
 
     // Inputs availability adjustment
     if (inputs === 'Yes') {
-        weight += 0.2; // Slightly higher weight if inputs are available
+        weight += 0.3; // Increase weight more significantly if inputs are available
     } else {
-        weight -= 0.1; // Lower weight if no inputs
+        weight -= 0.2; // Decrease weight if no inputs
     }
+
+    // Log weight for debugging
+    console.log(`Final weight after adjustments: ${weight}`);
 
     // Final land allocation calculation
     const allocatedLand = totalHectares * weight;
@@ -1299,6 +1304,7 @@ allocateButton.addEventListener('click', function (event) {
     processedCapitalDiv.style.display = 'block';
     processedCapitalInput.value = allocatedLand.toFixed(2); // Update only the input field
 });
+
 
 
 
