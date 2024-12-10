@@ -22,13 +22,13 @@ try:
     print("Connected to the database successfully!")
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS registration;")
+    cursor.execute("DROP TABLE IF EXISTS employees;")
     conn.commit()
 
 
     # SQL query to create a table
     create_table_query = """
-    CREATE TABLE employees (
+    CREATE TABLE registration (
         name VARCHAR(100) NOT NULL,
         surname VARCHAR(100) NOT NULL,
         username VARCHAR(100) UNIQUE NOT NULL,
@@ -41,7 +41,7 @@ try:
     # Execute the query
     cursor.execute(create_table_query)
     conn.commit()  # Commit the changes
-    print("Table 'employees' created successfully!")
+    print("Table 'registration' created successfully!")
 
 
     # Create a cursor object
