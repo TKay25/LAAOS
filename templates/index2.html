@@ -410,9 +410,7 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Enter amount" required>
                             </div>
-                            <input type="hidden" name="name" value="{{name}}">
-                            <input type="hidden" name="surname" value="{{surname}}">
-                            <input type="hidden" name="IDNo" value="{{IDNo}}">
+
 
                             <div id="processedCapitalDiv" class="col-span-2 sm:col-span-1" style="display: none;">
                                 <label for="processedCapital" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Land Allocation (Hactares)</label>
@@ -1329,15 +1327,9 @@ allocateButton.addEventListener('click', function (event) {
     const machinery = document.getElementById("machinery").value;
     const avcapital = document.getElementById("availableCapital").value;
     const land = document.getElementById("processedCapital").value;
-    const name = document.getElementById("name").value;
-    const surname = document.getElementById("surname").value;
-    const IDNum = document.getElementById("IDNo").value;
 
     // Create a formatted string to hold the form data
     const formData = 
-        <b>User name:</b> ${name}
-`       <b>User surname:</b> ${surname}
-`       <b>User National ID Number:</b> ${IDNum}
         <b>Province of Interest:</b> ${province}
         <b>District of Interest:</b> ${district}
         <b>Crops:</b> ${crops}
@@ -1369,9 +1361,6 @@ allocateButton.addEventListener('click', function (event) {
 
     // Add the formatted form data
     const formattedFormData = `
-        User Name: ${name}
-        User Surname: ${surname}
-        User National ID number: ${IDNum}
         Province of Interest: ${province}
         District of Interest: ${district}
         Crops: ${crops}
