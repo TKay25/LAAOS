@@ -1262,10 +1262,17 @@
             }
 
             // Display result
+            // Display result
             const resultDiv = document.getElementById("resultDiv");
             const processedCapitalField = document.getElementById("processedCapital");
+            
+            // Assuming 'allocatedLand' is the result you want to display
             processedCapitalField.value = allocatedLand.toFixed(2); // Round to 2 decimal places
-            resultDiv.classList.remove("hidden"); // Show result div
+            
+            // Show the result div and display the result
+            resultDiv.classList.remove("hidden"); // Remove the 'hidden' class from resultDiv
+            document.getElementById("processedCapitalDiv").style.display = "block"; // Make the processedCapitalDiv visible
+
         });
 
 
