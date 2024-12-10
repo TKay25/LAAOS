@@ -18,6 +18,30 @@ try:
     conn = psycopg2.connect(DATABASE_URL)
     print("Connected to the database successfully!")
     cursor = conn.cursor()
+
+    # SQL query to delete the table if it exists
+    drop_table_query = "DROP TABLE IF EXISTS registration;"
+    
+    # Execute the query to drop the table
+    cursor.execute(drop_table_query)
+
+    # SQL query to create a table
+    create_table_query = """
+    CREATE TABLE registraion (
+        name VARCHAR(100) NOT NULL,
+        surname VARCHAR(100) NOT NULL,
+        username VARCHAR(100) NOT NULL,
+        IDNo VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(100) NOT NULL
+    );
+    """
+
+    # Execute the query
+    cursor.execute(create_table_query)
+    conn.commit()  # Commit the changes
+    print("Table 'registration' created successfully!")
+    
     cursor.execute("SELECT * FROM registration;")
 
     rows = cursor.fetchall()
