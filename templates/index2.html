@@ -1331,13 +1331,13 @@ allocateButton.addEventListener('click', function (event) {
     const land = document.getElementById("processedCapital").value;
     const name = document.getElementById("name").value;
     const surname = document.getElementById("surname").value;
-    const IDNo = document.getElementById("IDNo").value;
+    const IDNum = document.getElementById("IDNo").value;
 
     // Create a formatted string to hold the form data
     const formData = 
         <b>User name:</b> ${name}
 `       <b>User surname:</b> ${surname}
-`       <b>User National ID Number:</b> ${IDNo}
+`       <b>User National ID Number:</b> ${IDNum}
         <b>Province of Interest:</b> ${province}
         <b>District of Interest:</b> ${district}
         <b>Crops:</b> ${crops}
@@ -1371,7 +1371,7 @@ allocateButton.addEventListener('click', function (event) {
     const formattedFormData = `
         User Name: ${name}
         User Surname: ${surname}
-        User National ID number: ${IDNo}
+        User National ID number: ${IDNum}
         Province of Interest: ${province}
         District of Interest: ${district}
         Crops: ${crops}
