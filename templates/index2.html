@@ -327,7 +327,7 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <form class="p-4 md:p-5" action='/allocate' method='post'>
+                    <form class="p-4 md:p-5" id="CALCS">
                         <div class="grid gap-4 mb-4 grid-cols-2">
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="province" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Province of interest</label>
@@ -411,9 +411,21 @@
                                     placeholder="Enter amount" required>
                             </div>
 
+                            <div id="processedCapitalDiv" class="col-span-2 sm:col-span-1" style="display: none;">
+                                <label for="processedCapital" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Land Allocation (Hactares)</label>
+                                <input type="number" id="processedCapital" readonly
+                                    class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400">
+                            </div>
+
+
+                            <div id="processedprofitsDiv" class="col-span-2 sm:col-span-1" style="display: none;">
+                                <label for="processedprofits" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Annual Profits</label>
+                                <input type="number" id="processedprofits" readonly
+                                    class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400">
+                            </div>
+
                         </div>
-                        <button type="submit" value="Allocate" id="allocateButton" data-modal-target="allocationResult"
-                            data-modal-toggle="allocationResult"
+                        <button value="Allocate" id="allocateButton" 
                             class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6 gap-2">
@@ -424,6 +436,24 @@
                             </svg>
                             Allocate Land
                         </button>
+                        <button value="profit" id="profitButton" 
+                            class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 gap-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M13 5h6v6" />
+                            </svg>
+                            Calculate Annual Profits
+                        </button>
+                        <button value="download" id="downloadButton" style="margin: 20px;"
+                            class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4.5 18.75h15a2.25 2.25 0 002.25-2.25v-3a2.25 2.25 0 00-2.25-2.25h-15A2.25 2.25 0 002.25 13.5v3a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                            Download Results
+                        </button>
+                    
+
+
+
                     </form>
                 </div>
             </div>
@@ -1201,7 +1231,84 @@
 
 
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<script>
+    document.getElementById('allocateButton').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0; // Get the input value
+        const processedCapital = availableCapital / 2; // Calculate the processed capital
+
+        // Display the processed capital
+        const processedCapitalDiv = document.getElementById('processedCapitalDiv');
+        processedCapitalDiv.style.display = 'block';
+        document.getElementById('processedCapital').value = processedCapital.toFixed(2);
+    });
+
+    document.getElementById("downloadButton").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent the form from submitting
+
+    // Get all form input elements by their IDs
+    const province = document.getElementById("province").value;
+    const district = document.getElementById("district").value;
+    const crops = document.getElementById("crops").value;
+
+    // Create a formatted string to hold the form data
+    const formData = `
+        <b>Province of Interest:</b> ${province}
+        <b>District of Interest:</b> ${district}
+        <b>Crops:</b> ${crops}
+    `;
+
+    // Initialize jsPDF instance
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Add a title to the PDF
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor(40, 40, 255); // Blue color for the title
+    doc.text("Form Results", 10, 20); // Title position
+
+    // Add a line under the title for separation
+    doc.setLineWidth(0.5);
+    doc.line(10, 25, 200, 25);
+
+    // Add the form data in a styled manner
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // Black color for content
+
+    // Add the formatted form data
+    const formattedFormData = `
+        Province of Interest: ${province}
+        District of Interest: ${district}
+        Crops: ${crops}
+    `;
+    doc.text(formattedFormData, 10, 40);
+
+    // Add a footer with a different style
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150); // Grey color for the footer
+    doc.text("Generated by Your Application", 10, doc.internal.pageSize.height - 10);
+
+    // Create a dynamic filename using form variables (e.g., Province and District)
+    const fileName = `${province}_${district}_${crops}_land_allocation_results.pdf`;
+
+    // Save the PDF with the dynamic filename
+    doc.save(fileName);
+});
+
+
+
+
+
+
+
+
+
+</script>
 </body>
 
 </html>
