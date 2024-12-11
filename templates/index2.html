@@ -1204,78 +1204,74 @@
 
 
 
-// Event listener for the allocate button
-const allocateButton = document.getElementById('allocateButton');
-allocateButton.addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent default form submission
+    // Ensure the event listener is attached after the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        const allocateButton = document.getElementById('allocateButton');
+        allocateButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            // Retrieve form inputs
+            const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0;
+            const province = document.getElementById('province').value;
+            const district = document.getElementById('district').value;
+            const crops = document.getElementById('crops').value;
+            const farmingType = document.getElementById('farmingtype').value;
+            const machinery = document.getElementById('machinery').value;
+            const inputs = document.getElementById('inputs').value;
+    
+            // Crop costs per hectare
+            const cropCosts = {
+                Sugarcane: 20000 + 17500, // Development + average production cost
+                Maize: 1602.20,
+                Cotton: 1000,
+                Groundnuts: 300,
+                Sunflowers: 600,
+                Wheat: 2500,
+                Tobacco: 4000,
+                Soybeans: 700,
+                Sorghum: 1000,
+            };
+    
+            const perHectareCost = cropCosts[crops] || 0;
+    
+            // Adjustments based on inputs
+            let adjustmentFactor = 1;
+    
+            if (province === 'Mashonaland West' || province === 'Mashonaland East') {
+                adjustmentFactor += 0.1;
+            } else {
+                adjustmentFactor -= 0.2;
+            }
+    
+            if (farmingType === 'Commercial') {
+                adjustmentFactor += 0.1;
+            } else if (farmingType === 'Subsistance') {
+                adjustmentFactor += 0.3;
+            }
+    
+            if (machinery === 'Yes') {
+                adjustmentFactor -= 0.1;
+            } else {
+                adjustmentFactor += 0.2;
+            }
+    
+            if (inputs === 'Yes') {
+                adjustmentFactor -= 0.1;
+            } else {
+                adjustmentFactor += 0.1;
+            }
+    
+            const adjustedCostPerHectare = perHectareCost * adjustmentFactor;
+            const maxLandAllocation = availableCapital / adjustedCostPerHectare;
+    
+            // Display the result
+            const processedCapitalDiv = document.getElementById('processedCapitalDiv');
+            processedCapitalDiv.style.display = 'block';
+            const processedCapitalInput = document.getElementById('processedCapital');
+            processedCapitalInput.value = maxLandAllocation > 0 ? maxLandAllocation.toFixed(2) : 0;
+        });
+    });
 
-    // Retrieve form inputs
-    const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0;
-    const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
-    const crops = document.getElementById('crops').value;
-    const farmingType = document.getElementById('farmingtype').value;
-    const machinery = document.getElementById('machinery').value;
-    const inputs = document.getElementById('inputs').value;
-
-    // Crop costs per hectare (adjusted based on provided data)
-    const cropCosts = {
-        Sugarcane: 20000 + 17500, // Development + average production cost
-        Maize: 1602.20,           // Production cost
-        Cotton: 1000,           // Production cost
-        Groundnuts: 300,           // Production cost
-        Sunflowers: 600,           // Production cost
-        Wheat: 2500,           // Production cost
-        Tobacco: 4000,           // Production cost
-        Soybeans: 700,           // Production cost
-        Sorghum: 1000,           // Production cost
-
-    };
-
-    // Assign base costs based on crop selection
-    const perHectareCost = cropCosts[crops] || 0;
-
-    // Adjustments based on inputs
-    let adjustmentFactor = 1; // Base factor
-
-    // Province adjustment
-    if (province === 'Mashonaland West' || province === 'Mashonaland East') {
-        adjustmentFactor += 0.1; // Favorable provinces
-    } else {
-        adjustmentFactor -= 0.2; // Less favorable provinces
-    }
-
-    // Farming type adjustment
-    if (farmingType === 'Commercial') {
-        adjustmentFactor += 0.1; // Higher adjustment for commercial farming
-    } else if (farmingType === 'Subsistance') {
-        adjustmentFactor += 0.3; // Slightly favorable for substrate
-    }
-
-    // Machinery availability adjustment
-    if (machinery === 'Yes') {
-        adjustmentFactor -= 0.1; // Boost allocation if machinery is available
-    } else {
-        adjustmentFactor += 0.2; // Reduce allocation if no machinery
-    }
-
-    // Inputs availability adjustment
-    if (inputs === 'Yes') {
-        adjustmentFactor -= 0.1; // Slight boost for available inputs
-    } else {
-        adjustmentFactor += 0.1; // Slight reduction for lack of inputs
-    }
-
-    // Calculate maximum land allocation based on capital and cost
-    const adjustedCostPerHectare = perHectareCost * adjustmentFactor;
-    const maxLandAllocation = availableCapital / adjustedCostPerHectare;
-
-    // Display the final allocated land
-    const processedCapitalDiv = document.getElementById('processedCapitalDiv');
-    processedCapitalDiv.style.display = 'block';
-    const processedCapitalInput = document.getElementById('processedCapital');
-    processedCapitalInput.value = maxLandAllocation > 0 ? maxLandAllocation.toFixed(2) : 0;
-});
 
 
 
