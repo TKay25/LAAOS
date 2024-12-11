@@ -1270,12 +1270,41 @@
 });
 
 
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const profitButton = document.getElementById('profitButton');
+    profitButton.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default action if inside a form
 
+        // Retrieve form inputs
+        const availableCapital = parseFloat(document.getElementById('availableCapital').value) || 0;
+        const crops = document.getElementById('crops').value;
 
+        // Crop profit rates per hectare (example rates)
+        const cropProfitRates = {
+            Sugarcane: 5000,
+            Maize: 150,
+            Cotton: 120,
+            Groundnuts: 50,
+            Sunflowers: 80,
+            Wheat: 300,
+            Tobacco: 400,
+            Soybeans: 70,
+            Sorghum: 100,
+        };
 
+        // Calculate annual profits
+        const profitRatePerHectare = cropProfitRates[crops] || 0;
+        const profits = availableCapital * profitRatePerHectare * 0.01;
 
-
-
+        // Display the result
+        const processedprofitsDiv = document.getElementById('processedprofitsDiv');
+        processedprofitsDiv.style.display = 'block'; // Make the div visible
+        const processedprofitsInput = document.getElementById('processedprofits');
+        processedprofitsInput.value = profits > 0 ? profits.toFixed(2) : 0; // Populate input with profits
+    });
+});
 
 </script>
 </body>
